@@ -17,6 +17,9 @@ class Command extends Component {
 
     this.state = {
       text: [],
+      index: 0,
+      currentText: "",
+      endOfCommands: false,
     };
   }
 
@@ -26,6 +29,8 @@ class Command extends Component {
       .then((res) => {
         this.setState({
           text: res.data,
+          index: 0,
+          currentText: res.data[0],
         });
         //console.log(this.state.text);
       })
@@ -34,21 +39,44 @@ class Command extends Component {
       });
   }
 
+  incrementCommand() {
+    var { index, text } = this.state;
+    index = index + 1;
+    if (index === text.length) {
+      this.setState({
+        endOfCommands: true,
+      });
+    } else {
+      this.setState({
+        index: index,
+        currentText: text[index],
+      });
+    }
+  }
+
   render() {
-    return (
-      <div>
-        {this.state.text.map((item, key) => {
-          return (
-            <div
-              className="text-white m-2 rounded text-center bg-dark"
-              key={key}
-            >
-              {item}
-            </div>
-          );
-        })}
-      </div>
-    );
+    const { currentText, endOfCommands } = this.state;
+
+    let displayText;
+
+    if (endOfCommands) {
+      displayText = (
+        <div className="text-white m-2 rounded text-center bg-success">
+          Thank You for recording data!!
+        </div>
+      );
+    } else {
+      displayText = (
+        <div
+          className="text-white m-2 rounded text-center bg-dark"
+          key={currentText}
+        >
+          {currentText}
+        </div>
+      );
+    }
+
+    return displayText;
   }
 }
 

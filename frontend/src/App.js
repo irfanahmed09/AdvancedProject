@@ -7,29 +7,31 @@ import Command from "./components/commands";
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.commandRef = React.createRef();
 
     this.state = {
       recordState: null,
       audioData: null,
+      showStart: true,
+      showStop: false,
     };
   }
 
   start = () => {
     this.setState({
       recordState: RecordState.START,
-    });
-  };
-
-  pause = () => {
-    this.setState({
-      recordState: RecordState.PAUSE,
+      showStart: false,
+      showStop: true,
     });
   };
 
   stop = () => {
     this.setState({
       recordState: RecordState.STOP,
+      showStart: true,
+      showStop: false,
     });
+    this.commandRef.current.incrementCommand();
   };
 
   onStop = (data) => {
@@ -73,7 +75,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { recordState } = this.state;
+    const { recordState, showStart, showStop } = this.state;
 
     return (
       <div className="container">
@@ -90,27 +92,28 @@ class App extends React.Component {
               src={this.state.audioData ? this.state.audioData.url : null}
             ></audio>
             <div className="row">
-              <button
-                className="btn btn-primary"
-                id="record"
-                onClick={this.start}
-              >
-                Start
-              </button>
-              <button
-                className="btn btn-warning"
-                id="pause"
-                onClick={this.pause}
-              >
-                Pause
-              </button>
-              <button className="btn btn-danger" id="stop" onClick={this.stop}>
-                Stop
-              </button>
+              {showStart && (
+                <button
+                  className="btn btn-primary"
+                  id="record"
+                  onClick={this.start}
+                >
+                  Start
+                </button>
+              )}
+              {showStop && (
+                <button
+                  className="btn btn-danger"
+                  id="stop"
+                  onClick={this.stop}
+                >
+                  Stop
+                </button>
+              )}
             </div>
           </div>
           <div className="command-container bg-secondary rounded col-sm">
-            <Command />
+            <Command ref={this.commandRef} />
           </div>
         </div>
       </div>
