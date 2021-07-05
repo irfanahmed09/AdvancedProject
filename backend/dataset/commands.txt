@@ -1,9 +1,1 @@
-print out|scan the document|close the browser|click on the element|set out|
-random Command 1| random Command 2|random Command 3|random Command 4|
-random Command 5|random Command 6|random Command 7|random Command 8|
-random Command 9|random Command 10|random Command 11|random Command 12|
-random Command 13|
-random Command 14|
-random Command 15|
-random Command 16|
-random Command 17
+print out|scan the document|close the browser|click on the element|set out
