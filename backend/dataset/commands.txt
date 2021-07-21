@@ -1,1 +1,2 @@
-print out|scan the document|close the browser|click on the element|set out
+close the browser|copy the folder|go back|go forward|next slide|open window|open youtube
+|print document|restart computer|search on google|set out|shut down the system

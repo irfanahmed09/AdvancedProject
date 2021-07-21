@@ -27,16 +27,25 @@ class Command extends Component {
   componentDidMount() {
     axios
       .get("/read-file")
-      .then((res) => {
+      .then((arr) => {
+        var res = [];
+
+        for (let i = 0; i < 3; i++) {
+          res = res.concat(arr.data);
+        }
+
+        res = this.shuffleArray(res);
+        console.log(res);
+
         this.setState({
-          text: res.data,
+          text: res,
           index: 0,
-          currentText: res.data[0],
+          currentText: res[0],
         });
         //console.log(this.state.text);
       })
       .catch((err) => {
-        console.log("Error from ShowResumeDetails");
+        console.log("Error from ShowCommandDetails");
       });
   }
 
@@ -59,6 +68,24 @@ class Command extends Component {
     }
   }
 
+  getCurrentText() {
+    var { currentText } = this.state;
+
+    return currentText;
+  }
+
+  shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+      // Generate random number
+      var j = Math.floor(Math.random() * (i + 1));
+
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+
+    return array;
+  }
   render() {
     const { currentText, endOfCommands, progress } = this.state;
 

@@ -49,8 +49,10 @@ class App extends React.Component {
 
     var data = this.state.audioData;
     this.commandRef.current.incrementCommand();
+    var command_name = this.commandRef.current.getCurrentText();
+    console.log(command_name);
     console.log("This is data url : ", data.url);
-    this.sendToServer(data.url);
+    this.sendToServer(data.url, command_name);
     //this.testFun();
     console.log("onStop: audio data", data);
   };
@@ -71,7 +73,7 @@ class App extends React.Component {
     });
   };
 
-  sendToServer = async (mediaBlob) => {
+  sendToServer = async (mediaBlob, command_name) => {
     console.log("sending blob to server.");
     if (mediaBlob != null) {
       var xhr_get_audio = new XMLHttpRequest();
@@ -83,9 +85,12 @@ class App extends React.Component {
           var blob = this.response;
           //send the blob to the server
           var xhr_send = new XMLHttpRequest();
+
           var fd = new FormData();
           fd.append("audio_data", blob);
+          //fd.append("command_name", "setout");
           xhr_send.open("POST", "/receive-audio", true);
+          xhr_send.setRequestHeader("command_name", command_name);
           // xhr_send.onload = function (e) {
           //   if (this.status === 200 && this.readyState == 4) {
           //     console.log(this.response);
