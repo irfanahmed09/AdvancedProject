@@ -22,8 +22,10 @@ const connection = mongoose.connect(mongoURL, {
 let storage = new GridFsStorage({
   db: connection,
   file: (req, file) => {
+    let command = req.get("command_name");
     return {
       bucketName: "AudioRecords",
+      filename: command,
       //Setting collection name, default name is fs
     };
   },
@@ -55,6 +57,7 @@ app.get("/read-file", (req, res) => {
 const PORT = process.env.PORT || env.port;
 
 app.post("/receive-audio", upload.single("audio_data"), (req, res) => {
+  //console.log(req);
   return res
     .status(200)
     .send({ message: "Received blob successfully and Uploaded" });
