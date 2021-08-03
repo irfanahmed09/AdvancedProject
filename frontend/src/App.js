@@ -1,23 +1,47 @@
 import React from "react";
-
 import AudioReactRecorder, { RecordState } from "audio-react-recorder";
 import "audio-react-recorder/dist/index.css";
 import Command from "./components/commands";
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.commandRef = React.createRef();
-
     this.state = {
+      userId: "",
       recordState: null,
       audioData: null,
       showStart: true,
       showStop: false,
       showUpload: false,
       disableCancel: true,
+      showCancel: true,
+      showAudio: true,
+      showSurvey: false,
+      googleFormLink:
+        "https://docs.google.com/forms/d/e/1FAIpQLSfDjiBwRF0ih3ERrvPIzb5n3Nvam1huhTQaF7xgd3eHS9SGqg/viewform?usp=pp_url&entry.121201065=",
     };
   }
+
+  componentDidMount() {
+    const uuid = uuidv4();
+    var link = this.state.googleFormLink + uuid;
+    this.setState({
+      userId: uuid,
+      googleFormLink: link,
+    });
+
+    this.sendUserIdToServer({ uuid: uuid });
+  }
+
+  sendUserIdToServer = async (formData) => {
+    //console.log(formData);
+
+    await axios.post("/receive-userData", formData);
+    //console.log("Done");
+  };
 
   start = () => {
     this.setState({
@@ -50,11 +74,21 @@ class App extends React.Component {
     var data = this.state.audioData;
     this.commandRef.current.incrementCommand();
     var command_name = this.commandRef.current.getCurrentText();
+    var userId = this.state.userId;
     console.log(command_name);
     console.log("This is data url : ", data.url);
-    this.sendToServer(data.url, command_name);
+    this.sendToServer(data.url, command_name, userId);
     //this.testFun();
     console.log("onStop: audio data", data);
+  };
+
+  survey = () => {
+    this.setState({
+      showStart: false,
+      showCancel: false,
+      showAudio: false,
+      showSurvey: true,
+    });
   };
 
   cancel = () => {
@@ -73,7 +107,7 @@ class App extends React.Component {
     });
   };
 
-  sendToServer = async (mediaBlob, command_name) => {
+  sendToServer = async (mediaBlob, command_name, userId) => {
     console.log("sending blob to server.");
     if (mediaBlob != null) {
       var xhr_get_audio = new XMLHttpRequest();
@@ -88,9 +122,10 @@ class App extends React.Component {
 
           var fd = new FormData();
           fd.append("audio_data", blob);
-          //fd.append("command_name", "setout");
           xhr_send.open("POST", "/receive-audio", true);
           xhr_send.setRequestHeader("command_name", command_name);
+          console.log(command_name, userId);
+          xhr_send.setRequestHeader("userId", userId);
           // xhr_send.onload = function (e) {
           //   if (this.status === 200 && this.readyState == 4) {
           //     console.log(this.response);
@@ -112,8 +147,17 @@ class App extends React.Component {
   };
 
   render() {
-    const { recordState, showStart, showStop, showUpload, disableCancel } =
-      this.state;
+    const {
+      recordState,
+      showStart,
+      showStop,
+      showUpload,
+      disableCancel,
+      showCancel,
+      showSurvey,
+      googleFormLink,
+      showAudio,
+    } = this.state;
 
     return (
       <div className="container">
@@ -122,8 +166,9 @@ class App extends React.Component {
             <div hidden>
               <AudioReactRecorder state={recordState} onStop={this.onStop} />
             </div>
+
             <div className="command-container rounded col-sm">
-              <Command ref={this.commandRef} />
+              <Command ref={this.commandRef} survey={this.survey} />
             </div>
           </div>
         </div>
@@ -159,7 +204,7 @@ class App extends React.Component {
                 Next
               </button>
             )}
-            {
+            {showCancel && (
               <button
                 className="btn btn-danger btn-lg offset-lg-2"
                 id="cancel"
@@ -169,20 +214,38 @@ class App extends React.Component {
               >
                 Cancel
               </button>
-            }
+            )}
           </div>
         </div>
         <div className="row m-4">
-          <div className="col text-center">
-            <audio
-              id="audio"
-              controls
-              src={this.state.audioData ? this.state.audioData.url : null}
-            ></audio>
-            <p>
-              <i>Click to hear what you've recorded.</i>
-            </p>
-          </div>
+          {showAudio && (
+            <div className="col text-center">
+              <audio
+                id="audio"
+                controls
+                src={this.state.audioData ? this.state.audioData.url : null}
+              ></audio>
+              <p>
+                <i>Click to hear what you've recorded.</i>
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="row m-4">
+          {showSurvey && (
+            <div className="col text-center">
+              <p>
+                <i>Please proceed to survey.</i>
+              </p>
+              <a
+                href={googleFormLink}
+                className="btn btn-primary btn-lg text-center"
+                style={{ height: "100px", width: "25%" }}
+              >
+                Survey
+              </a>
+            </div>
+          )}
         </div>
       </div>
     );
