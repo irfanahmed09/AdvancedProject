@@ -59,6 +59,7 @@ class Command extends Component {
         endOfCommands: true,
         progress: 100,
       });
+      this.props.survey();
     } else {
       this.setState({
         index: index,

@@ -12,6 +12,13 @@ var mongoURL = env.mongoURI;
 
 //start app
 const app = express();
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({ extended: true }));
+
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+
 //app.use(cors());
 
 const connection = mongoose.connect(mongoURL, {
@@ -23,9 +30,11 @@ let storage = new GridFsStorage({
   db: connection,
   file: (req, file) => {
     let command = req.get("command_name");
+    let userId = req.get("userId");
+    let filename = command + "|" + userId;
     return {
       bucketName: "AudioRecords",
-      filename: command,
+      filename: filename,
       //Setting collection name, default name is fs
     };
   },
@@ -62,6 +71,24 @@ app.post("/receive-audio", upload.single("audio_data"), (req, res) => {
     .status(200)
     .send({ message: "Received blob successfully and Uploaded" });
 });
+
+//#region  API used to store User Data.
+
+app.post("/receive-userData", (req, res) => {
+  console.log(req.body);
+  // upload to MongoDB
+  //console.log(connection);
+  mongoose.connection.db
+    .collection("AudioRecords.Users")
+    .insertOne(req.body, function (err, result) {
+      if (err) {
+        res.send("Error");
+      }
+      res.send("Success");
+    });
+});
+
+//#endregion
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
