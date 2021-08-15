@@ -238,7 +238,7 @@ class Trial extends Component {
               <button
                 className="btn btn-primary btn-lg"
                 id="record"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.start}
               >
                 Start
@@ -248,7 +248,7 @@ class Trial extends Component {
               <button
                 className="btn btn-danger btn-lg"
                 id="stop"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.stop}
               >
                 Stop
@@ -258,7 +258,7 @@ class Trial extends Component {
               <button
                 className="btn btn-success btn-lg"
                 id="upload"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.upload}
               >
                 Next
@@ -268,7 +268,7 @@ class Trial extends Component {
               <button
                 className="btn btn-danger btn-lg offset-lg-2"
                 id="cancel"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.cancel}
                 disabled={disableCancel}
               >
@@ -297,18 +297,18 @@ class Trial extends Component {
               <button
                 className="btn btn-primary btn-lg"
                 id="retry"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.retry}
               >
-                Retry Trials
+                Retry WarmUp
               </button>
               <button
                 className="btn btn-primary btn-lg offset-lg-2"
                 id="real"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.loadRealApp}
               >
-                Proceed to Real Data
+                Start Real Experiment
               </button>
             </div>
           )}

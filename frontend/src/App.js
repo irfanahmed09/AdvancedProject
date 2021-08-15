@@ -178,7 +178,7 @@ class App extends React.Component {
               <button
                 className="btn btn-primary btn-lg"
                 id="record"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.start}
               >
                 Start
@@ -188,7 +188,7 @@ class App extends React.Component {
               <button
                 className="btn btn-danger btn-lg"
                 id="stop"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.stop}
               >
                 Stop
@@ -198,7 +198,7 @@ class App extends React.Component {
               <button
                 className="btn btn-success btn-lg"
                 id="upload"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.upload}
               >
                 Next
@@ -208,7 +208,7 @@ class App extends React.Component {
               <button
                 className="btn btn-danger btn-lg offset-lg-2"
                 id="cancel"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
                 onClick={this.cancel}
                 disabled={disableCancel}
               >
@@ -240,7 +240,7 @@ class App extends React.Component {
               <a
                 href={googleFormLink}
                 className="btn btn-primary btn-lg text-center"
-                style={{ height: "100px", width: "25%" }}
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
               >
                 Survey
               </a>

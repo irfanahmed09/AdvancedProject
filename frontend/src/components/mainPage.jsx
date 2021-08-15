@@ -42,7 +42,7 @@ class Main extends Component {
                   <button
                     className="btn btn-danger btn-lg"
                     id="cancel"
-                    style={{ height: "100px", width: "25%" }}
+                    style={{ height: "100px", width: "25%", fontSize: "30px" }}
                     onClick={this.trial}
                   >
                     Begin Trial
