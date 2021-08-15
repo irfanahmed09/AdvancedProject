@@ -1,46 +1,67 @@
-import React from "react";
+import React, { Component } from "react";
 import AudioReactRecorder, { RecordState } from "audio-react-recorder";
 import "audio-react-recorder/dist/index.css";
-import Command from "./components/commands";
-import { v4 as uuidv4 } from "uuid";
-import axios from "axios";
 
-class App extends React.Component {
+class Trial extends Component {
   constructor(props) {
     super(props);
-    this.commandRef = React.createRef();
+
     this.state = {
-      userId: "",
-      recordState: null,
-      audioData: null,
+      text: [
+        "open the browser",
+        "print out",
+        "play a song",
+        "restart computer",
+        "close the browser",
+      ],
+      index: 0,
+      currentText: "",
+      endOfCommands: false,
+      progress: 0,
       showStart: true,
       showStop: false,
       showUpload: false,
       disableCancel: true,
       showCancel: true,
       showAudio: true,
-      showSurvey: false,
-      googleFormLink:
-        "https://docs.google.com/forms/d/e/1FAIpQLSfDjiBwRF0ih3ERrvPIzb5n3Nvam1huhTQaF7xgd3eHS9SGqg/viewform?usp=pp_url&entry.121201065=",
+      completeTrial: false,
     };
   }
 
   componentDidMount() {
-    const uuid = uuidv4();
-    var link = this.state.googleFormLink + uuid;
+    var text = this.state.text;
     this.setState({
-      userId: uuid,
-      googleFormLink: link,
+      currentText: text[0],
     });
-
-    this.sendUserIdToServer({ uuid: uuid });
   }
 
-  sendUserIdToServer = async (formData) => {
-    //console.log(formData);
+  incrementCommand() {
+    var { index, text } = this.state;
+    var progress = Math.floor(((index + 1) / text.length) * 100);
+    index = index + 1;
+    if (index >= text.length) {
+      this.setState({
+        index: text.length,
+        endOfCommands: true,
+        progress: 100,
+      });
+      this.complete();
+    } else {
+      this.setState({
+        index: index,
+        currentText: text[index],
+        progress: progress,
+      });
+    }
+  }
 
-    await axios.post("/receive-userData", formData);
-    //console.log("Done");
+  complete = () => {
+    this.setState({
+      showStart: false,
+      showCancel: false,
+      showAudio: false,
+      completeTrial: true,
+    });
   };
 
   start = () => {
@@ -72,23 +93,13 @@ class App extends React.Component {
     });
 
     var data = this.state.audioData;
-    this.commandRef.current.incrementCommand();
-    var command_name = this.commandRef.current.getCurrentText();
-    var userId = this.state.userId;
+    this.incrementCommand();
+    var command_name = this.state.currentText;
     console.log(command_name);
     console.log("This is data url : ", data.url);
-    this.sendToServer(data.url, command_name, userId);
-    //this.testFun();
+    //this.sendToServer(data.url, command_name, userId);
+    this.testFun();
     console.log("onStop: audio data", data);
-  };
-
-  survey = () => {
-    this.setState({
-      showStart: false,
-      showCancel: false,
-      showAudio: false,
-      showSurvey: true,
-    });
   };
 
   cancel = () => {
@@ -107,57 +118,77 @@ class App extends React.Component {
     });
   };
 
-  sendToServer = async (mediaBlob, command_name, userId) => {
-    console.log("sending blob to server.");
-    if (mediaBlob != null) {
-      var xhr_get_audio = new XMLHttpRequest();
-      xhr_get_audio.open("GET", mediaBlob, true);
-      xhr_get_audio.responseType = "blob";
-      xhr_get_audio.onload = function (e) {
-        if (this.status === 200 && this.readyState === 4) {
-          console.log("this blob is: ", this.response);
-          var blob = this.response;
-          //send the blob to the server
-          var xhr_send = new XMLHttpRequest();
-
-          var fd = new FormData();
-          fd.append("audio_data", blob);
-          xhr_send.open("POST", "/receive-audio", true);
-          xhr_send.setRequestHeader("command_name", command_name);
-          console.log(command_name, userId);
-          xhr_send.setRequestHeader("userId", userId);
-          // xhr_send.onload = function (e) {
-          //   if (this.status === 200 && this.readyState == 4) {
-          //     console.log(this.response);
-          //     alert("Hooray!");
-          //   } else {
-          //     console.log(this.response);
-          //     alert("Error");
-          //   }
-          // };
-          xhr_send.send(fd);
-        }
-      };
-      xhr_get_audio.send();
-    }
-  };
-
   testFun = () => {
     console.log("Sent blob to server.");
   };
 
+  loadRealApp = () => {
+    this.props.real();
+  };
+
+  retry = () => {
+    var text = this.state.text;
+    this.setState({
+      text: [
+        "open the browser",
+        "print out",
+        "play a song",
+        "restart computer",
+        "close the browser",
+      ],
+      index: 0,
+      currentText: text[0],
+      endOfCommands: false,
+      progress: 0,
+      recordState: null,
+      audioData: null,
+      showStart: true,
+      showStop: false,
+      showUpload: false,
+      disableCancel: true,
+      showCancel: true,
+      showAudio: true,
+      completeTrial: false,
+    });
+  };
+
   render() {
     const {
+      currentText,
+      endOfCommands,
+      progress,
       recordState,
       showStart,
       showStop,
       showUpload,
       disableCancel,
       showCancel,
-      showSurvey,
-      googleFormLink,
       showAudio,
+      completeTrial,
     } = this.state;
+
+    let displayText;
+
+    if (endOfCommands) {
+      displayText = (
+        <div
+          className="text-white m-2 rounded text-center bg-success"
+          style={{ height: "100px" }}
+        >
+          <h1>Warm Up Completed</h1>
+        </div>
+      );
+    } else {
+      displayText = (
+        <div
+          className="text-black m-2 rounded"
+          style={{ height: "100px" }}
+          key={currentText}
+        >
+          <h1 className="text-center">{currentText}</h1>
+        </div>
+      );
+    }
 
     return (
       <div className="container">
@@ -168,7 +199,36 @@ class App extends React.Component {
             </div>
 
             <div className="command-container rounded col-sm">
-              <Command ref={this.commandRef} survey={this.survey} />
+              <div className="row m-2">
+                <p>
+                  <strong>
+                    Progress : {this.state.index}/{this.state.text.length}
+                  </strong>
+                </p>
+                <div className="progress" style={{ height: "20px" }}>
+                  <div
+                    className="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    style={{
+                      width: this.state.progress + "%",
+                      color: "black",
+                    }}
+                    aria-valuenow={progress}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+              <div className="bg-light">
+                <p className="text-info">
+                  <i>
+                    <strong>
+                      <u>Please say command as you normally do</u>
+                    </strong>
+                  </i>
+                </p>
+                {displayText}
+              </div>
             </div>
           </div>
         </div>
@@ -232,18 +292,24 @@ class App extends React.Component {
           )}
         </div>
         <div className="row m-4">
-          {showSurvey && (
+          {completeTrial && (
             <div className="col text-center">
-              <p>
-                <i>Please proceed to survey.</i>
-              </p>
-              <a
-                href={googleFormLink}
-                className="btn btn-primary btn-lg text-center"
+              <button
+                className="btn btn-primary btn-lg"
+                id="retry"
                 style={{ height: "100px", width: "25%", fontSize: "30px" }}
+                onClick={this.retry}
               >
-                Survey
-              </a>
+                Retry WarmUp
+              </button>
+              <button
+                className="btn btn-primary btn-lg offset-lg-2"
+                id="real"
+                style={{ height: "100px", width: "25%", fontSize: "30px" }}
+                onClick={this.loadRealApp}
+              >
+                Start Real Experiment
+              </button>
             </div>
           )}
         </div>
@@ -252,4 +318,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Trial;
