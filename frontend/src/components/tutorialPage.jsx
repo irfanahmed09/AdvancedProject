@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import webApp from "../webApp.png";
 import start from "../Start.png";
 import stop from "../Stop.png";
-import upload from "../Upload.png";
 import next from "../Next.png";
-import cancel from "../Cancel.png";
 
 class Tutorial extends Component {
   state = {};
@@ -18,41 +15,45 @@ class Tutorial extends Component {
           </strong>
         </nav>
         <div className="row">
-          <p>
-            The Web App consists of commands which need to be recited aloud and
-            the audio will get recorded.
-          </p>
+          <p>This Web App is used to record audio for voice command.</p>
         </div>
-        <u>Steps to follow:</u>
+        <strong>
+          Below are the screenshots displaying the steps to follow:
+        </strong>
         <div className="row m-4 shadow-lg">
-          <img src={start} className="img-fluid" alt="Start" />
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              <u>Step #1</u>
+              <h4>
+                <u>Step #1 : Start the Recording</u>
+              </h4>
               <p>
                 Click on <strong>Start</strong> button and after 1 second, read
                 aloud the command being displayed.
               </p>
             </li>
           </ul>
+          <img src={start} className="img-fluid" alt="Start" />
         </div>
         <div className="row m-4 shadow-lg">
-          <img src={stop} className="img-fluid" alt="stop" />
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              <u>Step #2</u>
+              <h4>
+                <u>Step #2 : Stop the Recording</u>
+              </h4>
               <p>
                 Click on <strong>Stop</strong> button after you have finished
                 reading the command.
               </p>
             </li>
           </ul>
+          <img src={stop} className="img-fluid" alt="stop" />
         </div>
         <div className="row m-4 shadow-lg">
-          <img src={next} className="img-fluid" alt="next" />
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              <u>Step #3</u>
+              <h4>
+                <u>Step #3 : Check the recording and proceed</u>
+              </h4>
               <p>
                 Use the playback option as highlighted in the image to hear the
                 audio recorded. If you are satisified with the audio, click on{" "}
@@ -61,26 +62,19 @@ class Tutorial extends Component {
               </p>
             </li>
           </ul>
+          <img src={next} className="img-fluid" alt="next" />
         </div>
         <div className="row m-4 shadow-lg">
-          <img src={upload} className="img-fluid" alt="upload" />
           <ul className="list-group list-group-flush">
             <li className="list-group-item">
-              <u>Step #4</u>
+              <h4>
+                <u>WarmUp Section</u>
+              </h4>
               <p>
-                When <strong>Next</strong> button is clicked.The progress bar
-                will the show the progress made and count of the remaining
-                commands left.
-              </p>
-            </li>
-          </ul>
-        </div>
-        <div className="row m-4 shadow-lg">
-          <img src={cancel} className="img-fluid" alt="cancel" />
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item">
-              <p>
-                When <strong>Cancel</strong> button is clicked.
+                Click on <strong>Begin Trial</strong> to start the WarmUp
+                section. This section will have 5 commands to record audio one
+                by one. The progress bar will indicate the progress made and the
+                count of the commands.
               </p>
             </li>
           </ul>
