@@ -19,7 +19,7 @@ class App extends React.Component {
       disableCancel: true,
       showCancel: true,
       showAudio: true,
-      showSurvey: false,
+      showSurvey: true,
       googleFormLink:
         "https://docs.google.com/forms/d/e/1FAIpQLSfDjiBwRF0ih3ERrvPIzb5n3Nvam1huhTQaF7xgd3eHS9SGqg/viewform?usp=pp_url&entry.121201065=",
     };
@@ -235,7 +235,7 @@ class App extends React.Component {
           {showSurvey && (
             <div className="col text-center">
               <p>
-                <i>Please proceed to survey.</i>
+                <i>Please proceed to survey to end.</i>
               </p>
               <a
                 href={googleFormLink}
